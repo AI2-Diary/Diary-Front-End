@@ -34,3 +34,27 @@ export const getDetailDiary = async (diaryId) => {
     throw err;
   }
 };
+
+// 일기 작성
+export const createDiary = async (diaryContent) => {
+  try {
+    const res = await api.post('/diary', { content: diaryContent });
+    console.log('일기 작성 응답 데이터:', res.data);
+    return res.data;
+  } catch (err) {
+    console.error('일기 작성 실패:', err.message);
+    throw err;
+  }
+};
+
+// 일기 변환
+export const transformDiary = async () => {
+  try {
+    const res = await api.get('/diary/ai');
+    console.log('변환된 일기 응답 데이터:', res.data);
+    return res.data;
+  } catch (err) {
+    console.error('일기 변환 실패:', err.message);
+    throw err;
+  }
+};

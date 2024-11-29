@@ -1,17 +1,29 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ImageModal from '../components/ResultModal';
 import exResultImg from '../assets/ex_result.png'; 
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import { transformDiary } from '../api/Diary';
 
 const DiaryResultPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [diaryText, setDiaryText] = useState('');
   const screenshotRef = useRef(null);
   const navigate = useNavigate();
 
-  const diaryText =
-    'AI가 긍정적으로 변환한 일기 내용. 변환된 일기가 여기에 표시됨. ex) 오늘 하루는 정말 행복하고 보람찬 하루였습니다. 오늘의 일기입니다.';
+  useEffect(() => {
+    const fetchTransformedDiary = async () => {
+      try {
+        const transformedData = await transformDiary();
+        setDiaryText(transformedData);
+      } catch (error) {
+        console.error('일기 변환 실패:', error);
+      }
+    };
+
+    fetchTransformedDiary();
+  }, []);
 
   const handleSaveDiary = async () => {
     if (screenshotRef.current) {
@@ -36,8 +48,8 @@ const DiaryResultPage = () => {
     <ResultContainer ref={screenshotRef}>
       <h1>긍정적으로 변환된 일기</h1>
       <ContentSection>
-        <TextSection>
-          <p>{diaryText}</p>
+      <TextSection>
+          <p>{diaryText || '일기를 변환하는 중입니다...'}</p>
         </TextSection>
         <ImageSection>
           <GeneratedImage

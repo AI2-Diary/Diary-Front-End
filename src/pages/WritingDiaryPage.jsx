@@ -6,6 +6,8 @@ import CryingCat from '../assets/CryingCat.svg';
 import FearCat from '../assets/FearCat.svg';
 import JoyCat from '../assets/JoyCat.svg';
 import SmilingCat from '../assets/SmilingCat.svg';
+import { createDiary } from '../api/Diary';
+
 
 const WritingDiaryPage = () => {
   const navigate = useNavigate();
@@ -48,9 +50,16 @@ const WritingDiaryPage = () => {
       console.log('Diary Title:', title);
       console.log('Diary Content:', content);
 
+      const response = await createDiary({
+        title: title,
+        content: content,
+      });
+
+      console.log('일기 작성 응답:', response);
+
       navigate('/loading-complete');
     } catch (error) {
-      console.error('API 호출 실패:', error);
+      console.error('일기 작성 실패:', error);
     } finally {
       setLoading(false);
     }
