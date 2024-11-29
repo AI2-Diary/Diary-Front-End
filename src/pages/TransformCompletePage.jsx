@@ -1,16 +1,36 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import LoveCat from '../assets/LoveCat.svg';
 import HalfCircleBackground from '../assets/bottomHalfCircle.png';
+import { saveDiary } from '../api/Diary';
 
 const TransformationCompletePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { diaryTitle, diaryContent, diaryImgUrl } = location.state || {};
+
+  const handleSaveAndNavigate = async () => {
+    const diaryData = {
+      title: diaryTitle,
+      content: diaryContent,
+      imgUrl: diaryImgUrl,
+    };
+
+    try {
+      await saveDiary(diaryData);
+      console.log('일기 저장 완료');
+      
+      navigate('/result');
+    } catch (error) {
+      console.error('일기 저장 실패:', error);
+    }
+  };
 
   return (
     <CompleteContainer>
       <h1>변환이 완료되었습니다</h1>
       <Emoji src={LoveCat} alt="변환완료" />
-      <ConfirmButton onClick={() => navigate('/result')}>확인해 보기</ConfirmButton>
+      <ConfirmButton onClick={handleSaveAndNavigate}>확인해 보기</ConfirmButton>
     </CompleteContainer>
   );
 };

@@ -6,7 +6,7 @@ import CryingCat from '../assets/CryingCat.svg';
 import FearCat from '../assets/FearCat.svg';
 import JoyCat from '../assets/JoyCat.svg';
 import SmilingCat from '../assets/SmilingCat.svg';
-import { createDiary } from '../api/Diary';
+import { transformDiary  } from '../api/Diary';
 
 
 const WritingDiaryPage = () => {
@@ -43,23 +43,28 @@ const WritingDiaryPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       console.log('Diary Title:', title);
       console.log('Diary Content:', content);
-
-      const response = await createDiary({
-        title: title,
-        content: content,
+  
+      const response = await transformDiary(content);
+      console.log('일기 변환 응답 데이터:', response);
+  
+      const { content: transformedContent, imgUrl } = response.data;
+  
+      // 변환된 데이터 navigate로 전달
+      navigate('/loading-complete', {
+        state: {
+          diaryTitle: title,
+          diaryContent: transformedContent,
+          diaryImgUrl: imgUrl,
+        },
       });
-
-      console.log('일기 작성 응답:', response);
-
-      navigate('/loading-complete');
     } catch (error) {
-      console.error('일기 작성 실패:', error);
+      console.error('일기 변환 실패:', error);
     } finally {
       setLoading(false);
     }

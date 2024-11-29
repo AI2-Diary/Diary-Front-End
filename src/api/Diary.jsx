@@ -35,22 +35,28 @@ export const getDetailDiary = async (diaryId) => {
   }
 };
 
-// 일기 작성
-export const createDiary = async (diaryContent) => {
+// 일기 작성 : 변환된 일기가 DB에 저장되는 목적
+export const saveDiary = async (diaryData) => {
   try {
-    const res = await api.post('/diary', { content: diaryContent });
-    console.log('일기 작성 응답 데이터:', res.data);
-    return res.data;
+    const res = await api.post('/diary', {
+      title: diaryData.title, 
+      content: diaryData.content,
+      imgUrl: diaryData.imgUrl,
+    });
+    console.log('일기 저장 응답 데이터:', res.status); // 201 expected
+    return res.status;
   } catch (err) {
-    console.error('일기 작성 실패:', err.message);
+    console.error('일기 저장 실패:', err.message);
     throw err;
   }
 };
 
 // 일기 변환
-export const transformDiary = async () => {
+export const transformDiary = async (content) => {
   try {
-    const res = await api.get('/diary/ai');
+    const res = await api.get(`/diary/ai`, {
+      params: { content },
+    });
     console.log('변환된 일기 응답 데이터:', res.data);
     return res.data;
   } catch (err) {
@@ -58,3 +64,4 @@ export const transformDiary = async () => {
     throw err;
   }
 };
+
