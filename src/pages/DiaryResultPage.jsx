@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
 import styled from 'styled-components';
 import ImageModal from '../components/ResultModal';
-import exResultImg from '../assets/ex_result.png'; 
+import exResultImg from '../assets/ex_result.png';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const DiaryResultPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,34 +34,41 @@ const DiaryResultPage = () => {
     }
   };
   return (
-    <ResultContainer ref={screenshotRef}>
-      <h1>긍정적으로 변환된 일기</h1>
-      <ContentSection>
-        <TextSection>
-          <p>{diaryText}</p>
-        </TextSection>
-        <ImageSection>
-          <GeneratedImage
-            src={exResultImg}
-            alt="생성된 이미지"
-            onClick={() => setIsModalOpen(true)}
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 0 }} // 초기 상태: 아래에 위치하고 투명
+        animate={{ opacity: 1, y: 0 }} // 애니메이션 후: 제자리로 이동하고 불투명
+        exit={{ opacity: 0, y: -50 }} // 종료 시: 위로 이동하며 투명
+        transition={{ duration: 0.5 }} // 애니메이션 지속 시간: 0.5초
+      >
+        <ResultContainer ref={screenshotRef}>
+          <h1>긍정적으로 변환된 일기</h1>
+          <ContentSection>
+            <TextSection>
+              <p>{diaryText}</p>
+            </TextSection>
+            <ImageSection>
+              <GeneratedImage
+                src={exResultImg}
+                alt="생성된 이미지"
+                onClick={() => setIsModalOpen(true)}
+              />
+            </ImageSection>
+          </ContentSection>
+          <ImageModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            imgSrc={exResultImg}
           />
-        </ImageSection>
-      </ContentSection>
-      <ImageModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        imgSrc={exResultImg}
-      />
-      <ButtonSection>
-        <ActionButton onClick={handleSaveDiary}>
-          일기 저장하기
-        </ActionButton>
-        <ActionButton onClick={() => navigate('/diary-list')}>
-          모두의 일기장 보기
-        </ActionButton>
-      </ButtonSection>
-    </ResultContainer>
+          <ButtonSection>
+            <ActionButton onClick={handleSaveDiary}>일기 저장하기</ActionButton>
+            <ActionButton onClick={() => navigate('/diary-list')}>
+              모두의 일기장 보기
+            </ActionButton>
+          </ButtonSection>
+        </ResultContainer>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
@@ -93,7 +101,7 @@ const ContentSection = styled.div`
 `;
 
 const TextSection = styled.div`
-  flex: 1; 
+  flex: 1;
   text-align: justify;
   text-justify: inter-word;
 
