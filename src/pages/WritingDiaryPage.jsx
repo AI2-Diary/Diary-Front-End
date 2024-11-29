@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
 import CryingCat from '../assets/CryingCat.svg';
-import FearCat from '../assets/FearCat.svg';
 import JoyCat from '../assets/JoyCat.svg';
 import SmilingCat from '../assets/SmilingCat.svg';
 
@@ -16,7 +15,7 @@ const WritingDiaryPage = () => {
   // Emoji 애니메이션
   const [currentEmoji, setCurrentEmoji] = useState(0);
   const [fade, setFade] = useState(false);
-  const emojiImages = [CryingCat, FearCat, JoyCat, SmilingCat];
+  const emojiImages = [CryingCat, JoyCat, SmilingCat];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,7 +42,7 @@ const WritingDiaryPage = () => {
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 20000));
 
       console.log('Diary Title:', title);
       console.log('Diary Content:', content);
