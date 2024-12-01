@@ -6,6 +6,7 @@ import CryingCat from '../assets/CryingCat.svg';
 import JoyCat from '../assets/JoyCat.svg';
 import SmilingCat from '../assets/SmilingCat.svg';
 import { AnimatePresence, motion } from 'framer-motion';
+import { transformDiary } from '../api/Diary';
 
 const WritingDiaryPage = () => {
   const navigate = useNavigate();
@@ -43,12 +44,14 @@ const WritingDiaryPage = () => {
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 20000));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const res = await transformDiary(content);
+      const transformedContent = res.data.content;
+      const transformedImgUrl = res.data.imgUrl;
 
-      console.log('Diary Title:', title);
-      console.log('Diary Content:', content);
-
-      navigate('/loading-complete');
+      navigate('/loading-complete', {
+        state: { title, transformedContent, transformedImgUrl },
+      });
     } catch (error) {
       console.error('API 호출 실패:', error);
     } finally {
@@ -59,10 +62,10 @@ const WritingDiaryPage = () => {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: 0 }} // 초기 상태: 아래에 위치하고 투명
-        animate={{ opacity: 1, y: 0 }} // 애니메이션 후: 제자리로 이동하고 불투명
-        exit={{ opacity: 0, y: -50 }} // 종료 시: 위로 이동하며 투명
-        transition={{ duration: 0.5 }} // 애니메이션 지속 시간: 0.5초
+        initial={{ opacity: 0, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -50 }}
+        transition={{ duration: 0.5 }}
       >
         {loading && <Loading />}
         <FullPageContainer>

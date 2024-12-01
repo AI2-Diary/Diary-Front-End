@@ -1,18 +1,18 @@
 import { useState, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageModal from '../components/ResultModal';
 import exResultImg from '../assets/ex_result.png';
-import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const DiaryResultPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { title, transformedContent, transformedImgUrl } = location.state || {};
+
   const screenshotRef = useRef(null);
   const navigate = useNavigate();
-
-  const diaryText =
-    'AI가 긍정적으로 변환한 일기 내용. 변환된 일기가 여기에 표시됨. ex) 오늘 하루는 정말 행복하고 보람찬 하루였습니다. 오늘의 일기입니다.';
+  const location = useLocation();
 
   const handleSaveDiary = async () => {
     if (screenshotRef.current) {
@@ -36,20 +36,20 @@ const DiaryResultPage = () => {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: 0 }} // 초기 상태: 아래에 위치하고 투명
-        animate={{ opacity: 1, y: 0 }} // 애니메이션 후: 제자리로 이동하고 불투명
-        exit={{ opacity: 0, y: -50 }} // 종료 시: 위로 이동하며 투명
-        transition={{ duration: 0.5 }} // 애니메이션 지속 시간: 0.5초
+        initial={{ opacity: 0, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -50 }}
+        transition={{ duration: 0.5 }}
       >
         <ResultContainer ref={screenshotRef}>
-          <h1>긍정적으로 변환된 일기</h1>
+          <h1>{title || '제목 없음'}</h1>
           <ContentSection>
             <TextSection>
-              <p>{diaryText}</p>
+              <p>{transformedContent || '일기 내용이 없습니다. '}</p>
             </TextSection>
             <ImageSection>
               <GeneratedImage
-                src={exResultImg}
+                src={transformedImgUrl}
                 alt="생성된 이미지"
                 onClick={() => setIsModalOpen(true)}
               />
