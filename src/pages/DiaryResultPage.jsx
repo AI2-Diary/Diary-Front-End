@@ -8,11 +8,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const DiaryResultPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { title, transformedContent, transformedImgUrl } = location.state || {};
 
   const screenshotRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { title, transformedContent, transformedImgUrl } = location.state || {};
 
   const handleSaveDiary = async () => {
     if (screenshotRef.current) {

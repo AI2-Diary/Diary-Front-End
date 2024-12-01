@@ -21,7 +21,6 @@ export const getDiaryList = async () => {
 export const getDetailDiary = async (diaryId) => {
   try {
     const res = await api.get(`/diary/${diaryId}`);
-    console.log('세부 응답 데이터:', res.data);
     return res.data.data;
   } catch (err) {
     console.error(
@@ -35,14 +34,11 @@ export const getDetailDiary = async (diaryId) => {
 //작성한 일기 변환하기
 export const transformDiary = async (content) => {
   try {
-    console.log('content전달받음: ', content);
     const response = await api.get('/diary/ai', {
       params: {
         content: content,
       },
     });
-
-    console.log('res api:', response.data);
     return response.data;
   } catch (error) {
     console.error('테스트 요청 실패:', error.message);
